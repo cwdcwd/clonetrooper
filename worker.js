@@ -1,3 +1,5 @@
+'use strict';
+
 const config = require('config');
 const gitProcessor = require('./lib/gitProcessor');
 const kue = require('kue');

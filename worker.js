@@ -1,12 +1,10 @@
-'use strict';
+const gitProcessor = require('./lib/gitProcessor');
+const kue = require('kue');
 
-var _ = require('lodash');
-var kue = require('kue'),
-    queue = kue.createQueue();
-let gitProcessor = require('./lib/gitProcessor');
+const queue = kue.createQueue();
 
-queue.process('repo', function(job, done) {
-    var val = job.data;
+queue.process('repo', (job, done) => {
+    const val = job.data;
 
     console.log(val);
     gitProcessor.processJob(val, done);

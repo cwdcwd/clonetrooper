@@ -1,26 +1,25 @@
-'use strict';
+const config = require('config');
+const express = require('express');
+const kue = require('kue');
 
-let _ = require('lodash');
-let config = require('config');
-let express = require('express');
-let router = express.Router();
-
-var kue = require('kue'),
-    queue = kue.createQueue();
+const queue = kue.createQueue({
+    redis: config.REDIS_URL
+});
+const router = express.Router();
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res) => {
     res.render('index', {
         title: 'Clone Trooper'
     });
 });
 
-router.post('/webhook', function(req, res, next) {
-    let hookEvent = req.body;
-    let hookHeaders = req.headers;
-    let url = hookEvent.repository.url;
-    //CWD-- TODO: validate hmac on headers for security but meh
+router.post('/webhook', function(req, res) {
+    const hookEvent = req.body;
+    const hookHeaders = req.headers;
+    const url = hookEvent.repository.url;
+    // CWD-- TODO: validate hmac on headers for security but meh
 
     var job = queue.create('repo', {
         hookEvent, hookHeaders
